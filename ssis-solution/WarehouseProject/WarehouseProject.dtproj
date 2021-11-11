@@ -12,11 +12,11 @@
   <DataSourceViews />
   <DeploymentModelSpecificContent>
     <Manifest>
-      <SSIS:Project SSIS:ProtectionLevel="EncryptSensitiveWithUserKey" xmlns:SSIS="www.microsoft.com/SqlServer/SSIS">
+      <SSIS:Project SSIS:ProtectionLevel="DontSaveSensitive" xmlns:SSIS="www.microsoft.com/SqlServer/SSIS">
         <SSIS:Properties>
           <SSIS:Property SSIS:Name="ID">{3a7f0a0f-7fd6-4e75-ac7d-babd5aecc2a2}</SSIS:Property>
           <SSIS:Property SSIS:Name="Name">WarehouseProject</SSIS:Property>
-          <SSIS:Property SSIS:Name="VersionMajor">1</SSIS:Property>
+          <SSIS:Property SSIS:Name="VersionMajor">0</SSIS:Property>
           <SSIS:Property SSIS:Name="VersionMinor">0</SSIS:Property>
           <SSIS:Property SSIS:Name="VersionBuild">0</SSIS:Property>
           <SSIS:Property SSIS:Name="VersionComments">
@@ -26,34 +26,13 @@
           <SSIS:Property SSIS:Name="CreatorComputerName">HOMESTATION</SSIS:Property>
           <SSIS:Property SSIS:Name="Description">
           </SSIS:Property>
-          <SSIS:Property SSIS:Name="PasswordVerifier" SSIS:Sensitive="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAAaAzZPHMLk+6kD5nHsTjAgAAAAACAAAAAAAQZgAAAAEAACAAAAAE3cJJWDQfjo2nQmPUeDg3Pcu0v1p2dqQOaiDJKCtA3QAAAAAOgAAAAAIAACAAAAAEMfW5dGQZqgwuBPGoLAYSxCAX2qkeUl2/XhRM5su6apAAAAAumGcAYviLLejkUbRqRS0BmuOjriK/TB8kkFDEUDRcHgfCe2LhN5b9PGBK1tNQjcDuNI7GQ8sWG9HobhgPHei9HQrCkL4QIm3HzyGqX3ZAJ7FEKYohgHa6oP0sbCAri2efajEmPFbrwBalSq8LLNiZMkj2gZf7eSIsj605Pt7ouO5KiaoNj51e7sXDzHQ4UWZAAAAAmyZakWShMo7YkYQNWaAurOBWHscaxAcku6OG2YTPZyo/01HAD/Wpk3fm0faNvSOitm5VJd9LW8oaOoJqRrsTiQ==</SSIS:Property>
           <SSIS:Property SSIS:Name="FormatVersion">1</SSIS:Property>
         </SSIS:Properties>
-        <SSIS:Packages>
-          <SSIS:Package SSIS:Name="Package.dtsx" SSIS:EntryPoint="1" />
-        </SSIS:Packages>
+        <SSIS:Packages />
         <SSIS:ConnectionManagers />
         <SSIS:DeploymentInfo>
           <SSIS:ProjectConnectionParameters />
-          <SSIS:PackageInfo>
-            <SSIS:PackageMetaData SSIS:Name="Package.dtsx">
-              <SSIS:Properties>
-                <SSIS:Property SSIS:Name="ID">{CFED4A47-BAD0-4C5F-A544-E3EAA0FDDF81}</SSIS:Property>
-                <SSIS:Property SSIS:Name="Name">Package</SSIS:Property>
-                <SSIS:Property SSIS:Name="VersionMajor">1</SSIS:Property>
-                <SSIS:Property SSIS:Name="VersionMinor">0</SSIS:Property>
-                <SSIS:Property SSIS:Name="VersionBuild">0</SSIS:Property>
-                <SSIS:Property SSIS:Name="VersionComments">
-                </SSIS:Property>
-                <SSIS:Property SSIS:Name="VersionGUID">{DA8B253D-AF5A-4603-944A-D5A37F721C11}</SSIS:Property>
-                <SSIS:Property SSIS:Name="PackageFormatVersion">8</SSIS:Property>
-                <SSIS:Property SSIS:Name="Description">
-                </SSIS:Property>
-                <SSIS:Property SSIS:Name="ProtectionLevel">1</SSIS:Property>
-              </SSIS:Properties>
-              <SSIS:Parameters />
-            </SSIS:PackageMetaData>
-          </SSIS:PackageInfo>
+          <SSIS:PackageInfo />
         </SSIS:DeploymentInfo>
       </SSIS:Project>
     </Manifest>
