@@ -17,16 +17,14 @@ CREATE SCHEMA Reference
 GO
 
 /* ================================================================================================================================================================================= */
-/* Create integration area
+/* Create integration area */
 /* ================================================================================================================================================================================= */
 
-/****** Object:  Table [Integration].[PackageExecutions]    Script Date: 11.11.2021 13:52:50 ******/
-ALTER TABLE [Integration].[PackageExecutions] SET ( SYSTEM_VERSIONING = OFF  )
-GO
-
-/****** Object:  Table [Integration].[PackageExecutions]    Script Date: 11.11.2021 13:52:50 ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Integration].[PackageExecutions]') AND type in (N'U'))
-DROP TABLE [Integration].[PackageExecutions]
+BEGIN
+  ALTER TABLE [Integration].[PackageExecutions] SET ( SYSTEM_VERSIONING = OFF  )
+  DROP TABLE [Integration].[PackageExecutions]
+END
 GO
 
 /****** Object:  Table [Integration].[PackageExecutionsHistory]    Script Date: 11.11.2021 13:52:50 ******/
@@ -152,7 +150,7 @@ GO
 
 
 /****** Object:  StoredProcedure [Integration].[sp_GetExtractionPeriod]    Script Date: 11.11.2021 13:58:26 ******/
-DROP PROCEDURE [Integration].[sp_GetExtractionPeriod]
+DROP PROCEDURE IF EXISTS [Integration].[sp_GetExtractionPeriod]
 GO
 
 /****** Object:  StoredProcedure [Integration].[sp_GetExtractionPeriod]    Script Date: 11.11.2021 13:58:26 ******/
@@ -196,7 +194,7 @@ GO
 
 
 /* ================================================================================================================================================================================= */
-/* A list of main tables for reservations reports
+/* A list of main tables for reservations reports */
 /* ================================================================================================================================================================================= */
 --
 -- Create table [Uran].[Claims]
@@ -221,12 +219,18 @@ CREATE TABLE Uran.Claims (
   InsuranceSum decimal(18, 2) NULL,
   LogCreateDateTime datetime2 NOT NULL,
   LogActionDateTime datetime2 NOT NULL,
-  RecordSourceNOT NULL nvarchar(10) NOT NULL,
+  RecordSource nvarchar(10) NOT NULL,
   LoadDateTime datetime2 NOT NULL,
   CONSTRAINT PK_Claims_Id PRIMARY KEY CLUSTERED (Id)
 )
 ON [PRIMARY]
 GO
+
+
+GO
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Uran].[Claims]') AND type in (N'U'))
+  EXEC [Integration].[sp_InsertTableForMonitoring] @tableName = 'Uran.Claims', @userName = 'oranta\bezvershuk_do'
+GO  
 
 
 --
@@ -264,7 +268,7 @@ CREATE TABLE Uran.Cases (
   CreateDate datetime NOT NULL,
   LogCreateDateTime datetime2 NOT NULL,
   LogActionDateTime datetime2 NOT NULL,
-  RecordSourceNOT NULL nvarchar(10) NOT NULL,
+  RecordSource nvarchar(10) NOT NULL,
   LoadDateTime datetime2 NOT NULL,
   CONSTRAINT PK_Cases_Id PRIMARY KEY CLUSTERED (Id)
 )
@@ -272,6 +276,10 @@ ON [PRIMARY]
 TEXTIMAGE_ON [PRIMARY]
 GO
 
+GO
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Uran].[Cases]') AND type in (N'U'))
+  EXEC [Integration].[sp_InsertTableForMonitoring] @tableName = 'Uran.Cases', @userName = 'oranta\bezvershuk_do'
+GO  
 
 --
 -- Create table [Uran].[Products]
@@ -295,13 +303,17 @@ CREATE TABLE Uran.Products (
   InsuredGID uniqueidentifier NULL,
   LogCreateDateTime datetime2 NOT NULL,
   LogActionDateTime datetime2 NOT NULL,
-  RecordSourceNOT NULL nvarchar(10) NOT NULL,
+  RecordSource nvarchar(10) NOT NULL,
   LoadDateTime datetime2 NOT NULL,
   CONSTRAINT PK_Products_Id PRIMARY KEY CLUSTERED (Id)
 )
 ON [PRIMARY]
 GO
 
+GO
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Uran].[Products]') AND type in (N'U'))
+  EXEC [Integration].[sp_InsertTableForMonitoring] @tableName = 'Uran.Products', @userName = 'oranta\bezvershuk_do'
+GO  
 
 --
 -- Create table [Uran].[Events]
@@ -319,13 +331,17 @@ CREATE TABLE Uran.Events (
   Comment nvarchar(255) NULL,
   LogCreateDateTime datetime2 NOT NULL,
   LogActionDateTime datetime2 NOT NULL,
-  RecordSourceNOT NULL nvarchar(10) NOT NULL,
+  RecordSource nvarchar(10) NOT NULL,
   LoadDateTime datetime2 NOT NULL,
   CONSTRAINT PK_Events_Id PRIMARY KEY CLUSTERED (Id)
 )
 ON [PRIMARY]
 GO
 
+GO
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Uran].[Events]') AND type in (N'U'))
+  EXEC [Integration].[sp_InsertTableForMonitoring] @tableName = 'Uran.Events', @userName = 'oranta\bezvershuk_do'
+GO  
 
 --
 -- Create table [Uran].[Reservations]
@@ -357,13 +373,17 @@ CREATE TABLE Uran.Reservations (
   Deleted bit NOT NULL,
   LogCreateDateTime datetime2 NOT NULL,
   LogActionDateTime datetime2 NOT NULL,
-  RecordSourceNOT NULL nvarchar(10) NOT NULL,
+  RecordSource nvarchar(10) NOT NULL,
   LoadDateTime datetime2 NOT NULL,
   CONSTRAINT PK_Reservations_Id PRIMARY KEY CLUSTERED (Id)
 )
 ON [PRIMARY]
 GO
 
+GO
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Uran].[Reservations]') AND type in (N'U'))
+  EXEC [Integration].[sp_InsertTableForMonitoring] @tableName = 'Uran.Reservations', @userName = 'oranta\bezvershuk_do'
+GO  
 
 --
 -- Create table [Uran].[ClaimToParameterValues]
@@ -380,12 +400,17 @@ CREATE TABLE Uran.ClaimToParameterValues (
   AuthorGID uniqueidentifier NULL,
   LogCreateDateTime datetime2 NOT NULL,
   LogActionDateTime datetime2 NOT NULL,
-  RecordSourceNOT NULL nvarchar(10) NOT NULL,
+  RecordSource nvarchar(10) NOT NULL,
   LoadDateTime datetime2 NOT NULL,
   CONSTRAINT PK_ClaimToParameterValues_Id PRIMARY KEY CLUSTERED (Id)
 )
 ON [PRIMARY]
 GO
+
+GO
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Uran].[ClaimToParameterValues]') AND type in (N'U'))
+  EXEC [Integration].[sp_InsertTableForMonitoring] @tableName = 'Uran.ClaimToParameterValues', @userName = 'oranta\bezvershuk_do'
+GO  
 
 
 --
@@ -432,13 +457,17 @@ CREATE TABLE Uran.Faces (
   FaceID nvarchar(15) NULL,
   LogCreateDateTime datetime2 NOT NULL,
   LogActionDateTime datetime2 NOT NULL,
-  RecordSourceNOT NULL nvarchar(10) NOT NULL,
+  RecordSource nvarchar(10) NOT NULL,
   LoadDateTime datetime2 NOT NULL,
   CONSTRAINT PK_Faces_Id PRIMARY KEY CLUSTERED (Id)
 )
 ON [PRIMARY]
 GO
 
+GO
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Uran].[Faces]') AND type in (N'U'))
+  EXEC [Integration].[sp_InsertTableForMonitoring] @tableName = 'Uran.Faces', @userName = 'oranta\bezvershuk_do'
+GO  
 
 --
 -- Create table [Uran].[InsuranceObjects]
@@ -464,12 +493,17 @@ CREATE TABLE Uran.InsuranceObjects (
   ParentInsuranceObjectGID uniqueidentifier NULL,
   LogCreateDateTime datetime2 NOT NULL,
   LogActionDateTime datetime2 NOT NULL,
-  RecordSourceNOT NULL nvarchar(10) NOT NULL,
+  RecordSource nvarchar(10) NOT NULL,
   LoadDateTime datetime2 NOT NULL,
   CONSTRAINT PK_InsuranceObjects_Id PRIMARY KEY CLUSTERED (Id)
 )
 ON [PRIMARY]
 GO
+
+GO
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Uran].[InsuranceObjects]') AND type in (N'U'))
+  EXEC [Integration].[sp_InsertTableForMonitoring] @tableName = 'Uran.InsuranceObjects', @userName = 'oranta\bezvershuk_do'
+GO  
 
 
 --
@@ -487,12 +521,17 @@ CREATE TABLE Uran.EventToParameterValues (
   AuthorGID uniqueidentifier NULL,
   LogCreateDateTime datetime2 NOT NULL,
   LogActionDateTime datetime2 NOT NULL,
-  RecordSourceNOT NULL nvarchar(10) NOT NULL,
+  RecordSource nvarchar(10) NOT NULL,
   LoadDateTime datetime2 NOT NULL,
   CONSTRAINT PK_EventToParameterValues_Id PRIMARY KEY CLUSTERED (Id)
 )
 ON [PRIMARY]
 GO
+
+GO
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Uran].[EventToParameterValues]') AND type in (N'U'))
+  EXEC [Integration].[sp_InsertTableForMonitoring] @tableName = 'Uran.EventToParameterValues', @userName = 'oranta\bezvershuk_do'
+GO 
 
 
 --
@@ -542,12 +581,18 @@ CREATE TABLE Uran.Payables (
   PaymentPeriodAmount decimal(18, 2) NULL,
   LogCreateDateTime datetime2 NOT NULL,
   LogActionDateTime datetime2 NOT NULL,
-  RecordSourceNOT NULL nvarchar(10) NOT NULL,
+  RecordSource nvarchar(10) NOT NULL,
   LoadDateTime datetime2 NOT NULL,
   CONSTRAINT PK_Payables_Id PRIMARY KEY CLUSTERED (Id)
 )
 ON [PRIMARY]
 GO
+
+GO
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Uran].[Payables]') AND type in (N'U'))
+  EXEC [Integration].[sp_InsertTableForMonitoring] @tableName = 'Uran.Payables', @userName = 'oranta\bezvershuk_do'
+GO 
+
 
 
 --
@@ -559,12 +604,18 @@ CREATE TABLE Reference.ReservationCalculationTypes (
   id int NOT NULL,
   gid uniqueidentifier NOT NULL,
   Name nvarchar(100) NOT NULL,
-  RecordSourceNOT NULL nvarchar(10) NOT NULL,
+  RecordSource nvarchar(10) NOT NULL,
   LoadDateTime datetime2 NOT NULL,
   CONSTRAINT PK_ReservationCalculationTypes_Id PRIMARY KEY CLUSTERED (Id)
 )
 ON [PRIMARY]
 GO
+
+GO
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Reference].[ReservationCalculationTypes]') AND type in (N'U'))
+  EXEC [Integration].[sp_InsertTableForMonitoring] @tableName = 'Reference.ReservationCalculationTypes', @userName = 'oranta\bezvershuk_do'
+GO 
+
 
 
 --
@@ -581,13 +632,17 @@ CREATE TABLE Reference.ProgramTypeToClaimTypes (
   Reserve decimal(18, 2) NULL,
   RegulationCost decimal(18, 2) NULL,
   RetentionLimit decimal(18, 2) NULL,
-  RecordSourceNOT NULL nvarchar(10) NOT NULL,
+  RecordSource nvarchar(10) NOT NULL,
   LoadDateTime datetime2 NOT NULL,
   CONSTRAINT PK_ProgramTypeToClaimTypes_Id PRIMARY KEY CLUSTERED (Id)
 )
 ON [PRIMARY]
 GO
 
+GO
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Reference].[ProgramTypeToClaimTypes]') AND type in (N'U'))
+  EXEC [Integration].[sp_InsertTableForMonitoring] @tableName = 'Reference.ProgramTypeToClaimTypes', @userName = 'oranta\bezvershuk_do'
+GO 
 
 --
 -- Create table [Uran].[Vehicles]
@@ -629,13 +684,17 @@ CREATE TABLE Uran.Vehicles (
   Address nvarchar(255) NULL,
   LogCreateDateTime datetime2 NOT NULL,
   LogActionDateTime datetime2 NOT NULL,
-  RecordSourceNOT NULL nvarchar(10) NOT NULL,
+  RecordSource nvarchar(10) NOT NULL,
   LoadDateTime datetime2 NOT NULL,
   CONSTRAINT PK_Vehicles_Id PRIMARY KEY CLUSTERED (Id)
 )
 ON [PRIMARY]
 GO
 
+GO
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Uran].[Vehicles]') AND type in (N'U'))
+  EXEC [Integration].[sp_InsertTableForMonitoring] @tableName = 'Uran.Vehicles', @userName = 'oranta\bezvershuk_do'
+GO 
 
 --
 -- Create table [Uran].[Regresses]
@@ -660,13 +719,17 @@ CREATE TABLE Uran.Regresses (
   BranchGID uniqueidentifier NULL,
   LogCreateDateTime datetime2 NOT NULL,
   LogActionDateTime datetime2 NOT NULL,
-  RecordSourceNOT NULL nvarchar(10) NOT NULL,
+  RecordSource nvarchar(10) NOT NULL,
   LoadDateTime datetime2 NOT NULL,
   CONSTRAINT PK_Regresses_Id PRIMARY KEY CLUSTERED (Id)
 )
 ON [PRIMARY]
 GO
 
+GO
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Uran].[Regresses]') AND type in (N'U'))
+  EXEC [Integration].[sp_InsertTableForMonitoring] @tableName = 'Uran.Regresses', @userName = 'oranta\bezvershuk_do'
+GO 
 
 --
 -- Create table [Uran].[CasesDocuments]
@@ -688,13 +751,17 @@ CREATE TABLE Uran.CasesDocuments (
   Deleted bit NOT NULL,
   LogCreateDateTime datetime2 NOT NULL,
   LogActionDateTime datetime2 NOT NULL,
-  RecordSourceNOT NULL nvarchar(10) NOT NULL,
+  RecordSource nvarchar(10) NOT NULL,
   LoadDateTime datetime2 NOT NULL,
   CONSTRAINT PK_CasesDocuments_Id PRIMARY KEY CLUSTERED (Id)
 )
 ON [PRIMARY]
 GO
 
+GO
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Uran].[CasesDocuments]') AND type in (N'U'))
+  EXEC [Integration].[sp_InsertTableForMonitoring] @tableName = 'Uran.CasesDocuments', @userName = 'oranta\bezvershuk_do'
+GO 
 
 --
 -- Create table [Uran].[Documents]
@@ -723,12 +790,17 @@ CREATE TABLE Uran.Documents (
   WorkflowGID uniqueidentifier NULL,
   LogCreateDateTime datetime2 NOT NULL,
   LogActionDateTime datetime2 NOT NULL,
-  RecordSourceNOT NULL nvarchar(10) NOT NULL,
+  RecordSource nvarchar(10) NOT NULL,
   LoadDateTime datetime2 NOT NULL,
   CONSTRAINT PK_Documents_Id PRIMARY KEY CLUSTERED (Id)
 )
 ON [PRIMARY]
 GO
+
+GO
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Uran].[Documents]') AND type in (N'U'))
+  EXEC [Integration].[sp_InsertTableForMonitoring] @tableName = 'Uran.Documents', @userName = 'oranta\bezvershuk_do'
+GO 
 
 
 --
@@ -746,12 +818,17 @@ CREATE TABLE Uran.PayableToParameterValues (
   AuthorGID uniqueidentifier NULL,
   LogCreateDateTime datetime2 NOT NULL,
   LogActionDateTime datetime2 NOT NULL,
-  RecordSourceNOT NULL nvarchar(10) NOT NULL,
+  RecordSource nvarchar(10) NOT NULL,
   LoadDateTime datetime2 NOT NULL,
   CONSTRAINT PK_PayableToParameterValues_Id PRIMARY KEY CLUSTERED (Id)
 )
 ON [PRIMARY]
 GO
+
+GO
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Uran].[PayableToParameterValues]') AND type in (N'U'))
+  EXEC [Integration].[sp_InsertTableForMonitoring] @tableName = 'Uran.PayableToParameterValues', @userName = 'oranta\bezvershuk_do'
+GO 
 
 
 --
@@ -784,12 +861,17 @@ CREATE TABLE Uran.Calculations (
   BranchGID uniqueidentifier NULL,
   LogCreateDateTime datetime2 NOT NULL,
   LogActionDateTime datetime2 NOT NULL,
-  RecordSourceNOT NULL nvarchar(10) NOT NULL,
+  RecordSource nvarchar(10) NOT NULL,
   LoadDateTime datetime2 NOT NULL,
   CONSTRAINT PK_Calculations_Id PRIMARY KEY CLUSTERED (Id)
 )
 ON [PRIMARY]
 GO
+
+GO
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Uran].[Calculations]') AND type in (N'U'))
+  EXEC [Integration].[sp_InsertTableForMonitoring] @tableName = 'Uran.Calculations', @userName = 'oranta\bezvershuk_do'
+GO 
 
 
 --
@@ -807,13 +889,17 @@ CREATE TABLE Uran.CalculationToParameterValues (
   AuthorGID uniqueidentifier NULL,
   LogCreateDateTime datetime2 NOT NULL,
   LogActionDateTime datetime2 NOT NULL,
-  RecordSourceNOT NULL nvarchar(10) NOT NULL,
+  RecordSource nvarchar(10) NOT NULL,
   LoadDateTime datetime2 NOT NULL,
   CONSTRAINT PK_CalculationToParameterValues_Id PRIMARY KEY CLUSTERED (Id)
 )
 ON [PRIMARY]
 GO
 
+GO
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Uran].[CalculationToParameterValues]') AND type in (N'U'))
+  EXEC [Integration].[sp_InsertTableForMonitoring] @tableName = 'Uran.CalculationToParameterValues', @userName = 'oranta\bezvershuk_do'
+GO 
 
 --
 -- Create table [Reference].[DocumentParameterValues]
@@ -827,12 +913,16 @@ CREATE TABLE Reference.DocumentParameterValues (
   Value sql_variant NULL,
   LogCreateDateTime datetime2 NOT NULL,
   LogActionDateTime datetime2 NOT NULL,
-  RecordSourceNOT NULL nvarchar(10) NOT NULL,
+  RecordSource nvarchar(10) NOT NULL,
   LoadDateTime datetime2 NOT NULL,
   CONSTRAINT PK_DocumentParameterValues_Id PRIMARY KEY CLUSTERED (Id)
 )
 ON [PRIMARY]
 
+GO
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Reference].[DocumentParameterValues]') AND type in (N'U'))
+  EXEC [Integration].[sp_InsertTableForMonitoring] @tableName = 'Reference.DocumentParameterValues', @userName = 'oranta\bezvershuk_do'
+GO 
 
 GO
 SET NOEXEC OFF

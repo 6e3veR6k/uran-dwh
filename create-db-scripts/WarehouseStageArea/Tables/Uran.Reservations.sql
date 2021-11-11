@@ -1,0 +1,31 @@
+﻿CREATE TABLE [Uran].[Reservations] (
+  [id] [bigint] NOT NULL,
+  [gid] [uniqueidentifier] NOT NULL,
+  [Amount] [decimal](18, 2) NOT NULL,
+  [PreviousDamageAmount] [decimal](18, 2) NULL,
+  [CreateUserGID] [uniqueidentifier] NOT NULL,
+  [CreateDate] [datetime] NOT NULL,
+  [CalculationTypeGID] [uniqueidentifier] NOT NULL,
+  [CurrencyTypeGID] [uniqueidentifier] NOT NULL,
+  [AmountHRN] [decimal](18, 2) NULL,
+  [AmountEuro] [decimal](18, 2) NULL,
+  [CaseGID] [uniqueidentifier] NOT NULL,
+  [AuthorGID] [uniqueidentifier] NULL,
+  [ClaimDate] [datetime] NULL,
+  [EndingDate] [datetime] NULL,
+  [ParentGID] [uniqueidentifier] NULL,
+  [DocumentGID] [uniqueidentifier] NULL,
+  [ParentDocumentGID] [uniqueidentifier] NULL,
+  [LastModifiedDate] [datetime] NULL,
+  [LastModifiedAuthorGID] [uniqueidentifier] NULL,
+  [ExportDate] [datetime] NULL,
+  [DoNotExport] [bit] NOT NULL,
+  [Deleted] [bit] NOT NULL,
+  [LogCreateDateTime] [datetime2] NOT NULL,
+  [LogActionDateTime] [datetime2] NOT NULL,
+  [RecordSource] [nvarchar](10) NOT NULL,
+  [LoadDateTime] [datetime2] NOT NULL,
+  CONSTRAINT [PK_Reservations_Id] PRIMARY KEY CLUSTERED ([id])
+)
+ON [PRIMARY]
+GO
