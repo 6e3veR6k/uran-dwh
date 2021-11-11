@@ -1,21 +1,210 @@
-/* ================================================================================================================================================================================= */
-/* A list of main tables for reservations reports
-/* ================================================================================================================================================================================= */
-
 USE WarehouseStageArea
 GO
 
 IF DB_NAME() <> N'WarehouseStageArea' SET NOEXEC ON
+
+--
+-- Create schemas for working tables
+--
+GO
+CREATE SCHEMA Uran
+GO
+CREATE SCHEMA Jupiter
+GO
+CREATE SCHEMA Integration
+GO
+CREATE SCHEMA Reference
+GO
+
+/* ================================================================================================================================================================================= */
+/* Create integration area
+/* ================================================================================================================================================================================= */
+
+/****** Object:  Table [Integration].[PackageExecutions]    Script Date: 11.11.2021 13:52:50 ******/
+ALTER TABLE [Integration].[PackageExecutions] SET ( SYSTEM_VERSIONING = OFF  )
+GO
+
+/****** Object:  Table [Integration].[PackageExecutions]    Script Date: 11.11.2021 13:52:50 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Integration].[PackageExecutions]') AND type in (N'U'))
+DROP TABLE [Integration].[PackageExecutions]
+GO
+
+/****** Object:  Table [Integration].[PackageExecutionsHistory]    Script Date: 11.11.2021 13:52:50 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Integration].[PackageExecutionsHistory]') AND type in (N'U'))
+DROP TABLE [Integration].[PackageExecutionsHistory]
+GO
+
+/****** Object:  Table [Integration].[PackageExecutionsHistory]    Script Date: 11.11.2021 13:52:50 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [Integration].[PackageExecutionsHistory](
+	[PackageExecutionId] [int] NOT NULL,
+	[UserName] [nvarchar](100) NOT NULL,
+	[LastSuccessfulExtractionDatetime] [datetime2](7) NOT NULL,
+	[CurrentExtractionDateTime] [datetime2](7) NOT NULL,
+	[TableName] [nvarchar](255) NOT NULL,
+	[Message] [nvarchar](255) NOT NULL,
+	[ValidFrom] [datetime2](7) NOT NULL,
+	[ValidTo] [datetime2](7) NOT NULL
+) ON [PRIMARY]
+GO
+
+/****** Object:  Table [Integration].[PackageExecutions]    Script Date: 11.11.2021 13:52:50 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [Integration].[PackageExecutions](
+	[PackageExecutionId] [int] IDENTITY(1,1) NOT NULL,
+	[UserName] [nvarchar](100) NOT NULL,
+	[LastSuccessfulExtractionDatetime] [datetime2](7) NOT NULL,
+	[CurrentExtractionDateTime] [datetime2](7) NOT NULL,
+	[TableName] [nvarchar](255) NOT NULL,
+	[Message] [nvarchar](255) NOT NULL,
+	[ValidFrom] [datetime2](7) GENERATED ALWAYS AS ROW START NOT NULL,
+	[ValidTo] [datetime2](7) GENERATED ALWAYS AS ROW END NOT NULL,
+ CONSTRAINT [PK_PackageExecutions_PackageExecutionId] PRIMARY KEY CLUSTERED 
+(
+	[PackageExecutionId] DESC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY],
+	PERIOD FOR SYSTEM_TIME ([ValidFrom], [ValidTo])
+) ON [PRIMARY]
+WITH
+(
+SYSTEM_VERSIONING = ON ( HISTORY_TABLE = [Integration].[PackageExecutionsHistory] )
+)
 GO
 
 
+/****** Object:  StoredProcedure [Integration].[sp_ClearStageTables]    Script Date: 11.11.2021 13:54:15 ******/
+DROP PROCEDURE IF EXISTS [Integration].[sp_ClearStageTables]
+GO
+
+/****** Object:  StoredProcedure [Integration].[sp_ClearStageTables]    Script Date: 11.11.2021 13:54:15 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [Integration].[sp_ClearStageTables]
+AS
+  BEGIN
+
+    DECLARE @sqlCommand NVARCHAR(4000) = (SELECT 'TRUNCATE TABLE ' + P.TableName + ';' AS 'data()'
+    FROM Integration.PackageExecutions AS P
+    FOR XML PATH('')
+    )
+
+    EXECUTE sp_executesql @sqlCommand
+
+  END
+
+
+/****** Object:  StoredProcedure [Integration].[sp_InsertTableForMonitoring]    Script Date: 11.11.2021 13:55:56 ******/
+DROP PROCEDURE IF EXISTS [Integration].[sp_InsertTableForMonitoring]
+GO
+
+/****** Object:  StoredProcedure [Integration].[sp_InsertTableForMonitoring]    Script Date: 11.11.2021 13:55:56 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- =============================================
+-- Author:		bezvershuk_do
+-- Create date: 19.08.2021
+-- Description:	
+-- =============================================
+CREATE PROCEDURE [Integration].[sp_InsertTableForMonitoring] 
+	-- Add the parameters for the stored procedure here
+	(
+		@tableName NVARCHAR(50) = NULL,
+		@userName NVARCHAR(50) = NULL
+	)
+AS
+BEGIN
+	SET NOCOUNT ON;
+
+
+	MERGE [Integration].[PackageExecutions] AS tg
+	USING (SELECT COALESCE(@userName, SUSER_SNAME()), CAST('20100101' AS DATETIME2(7)), CAST('20100101' AS DATETIME2(7)), @tableName, 'new') 
+		AS src ([UserName], [LastSuccessfulExtractionDatetime], [CurrentExtractionDateTime], [TableName], [Message])
+		ON (tg.TableName = src.TableName)
+	WHEN MATCHED THEN
+		UPDATE SET 
+			[UserName] = src.[UserName],
+			[LastSuccessfulExtractionDatetime] = src.[LastSuccessfulExtractionDatetime],
+			[CurrentExtractionDateTime] = src.[CurrentExtractionDateTime], 
+			[Message] = src.[Message]
+	WHEN NOT MATCHED THEN
+		INSERT ([UserName], [LastSuccessfulExtractionDatetime], [CurrentExtractionDateTime], [TableName], [Message])
+		VALUES (src.UserName, src.LastSuccessfulExtractionDatetime, src.CurrentExtractionDateTime, src.TableName, src.[Message]);
+END
+GO
+
+
+/****** Object:  StoredProcedure [Integration].[sp_GetExtractionPeriod]    Script Date: 11.11.2021 13:58:26 ******/
+DROP PROCEDURE [Integration].[sp_GetExtractionPeriod]
+GO
+
+/****** Object:  StoredProcedure [Integration].[sp_GetExtractionPeriod]    Script Date: 11.11.2021 13:58:26 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+-- =============================================
+-- Author:		bezvershuk_do
+-- Create date: 19.08.2021
+-- Description:	
+-- =============================================
+CREATE PROCEDURE [Integration].[sp_GetExtractionPeriod]
+	-- Add the parameters for the stored procedure here
+	@tableName NVARCHAR(50) = NULL
+AS
+  BEGIN
+    SET NOCOUNT ON;
+    DECLARE @sqlCommand NVARCHAR(MAX) = 'TRUNCATE TABLE ' + @tableName
+
+    EXECUTE sp_executesql @sqlCommand
+
+    UPDATE [Integration].[PackageExecutions] 
+    --todo: change to curent timestamp  / CURRENT_TIMESTAMP
+    SET CurrentExtractionDateTime = '20211111',
+      UserName = SUSER_SNAME(),
+      Message = 'in progress'
+    WHERE  TableName = @tableName
+
+    SELECT LastSuccessfulExtractionDatetime, CurrentExtractionDateTime
+    FROM [Integration].[PackageExecutions]
+    WHERE TableName = @tableName
+
+  END
+
+GO
+
+
+
+/* ================================================================================================================================================================================= */
+/* A list of main tables for reservations reports
+/* ================================================================================================================================================================================= */
 --
 -- Create table [Uran].[Claims]
 --
 PRINT (N'Create table [Uran].[Claims]')
 GO
 CREATE TABLE Uran.Claims (
-  id int IDENTITY,
+  id int NOT NULL,
   gid uniqueidentifier NOT NULL,
   ClaimerGID uniqueidentifier NULL,
   TypeGID uniqueidentifier NOT NULL,
@@ -32,7 +221,7 @@ CREATE TABLE Uran.Claims (
   InsuranceSum decimal(18, 2) NULL,
   LogCreateDateTime datetime2 NOT NULL,
   LogActionDateTime datetime2 NOT NULL,
-  RecordSourceIdentity nvarchar(10) NOT NULL,
+  RecordSourceNOT NULL nvarchar(10) NOT NULL,
   LoadDateTime datetime2 NOT NULL,
   CONSTRAINT PK_Claims_Id PRIMARY KEY CLUSTERED (Id)
 )
@@ -46,7 +235,7 @@ GO
 PRINT (N'Create table [Uran].[Cases]')
 GO
 CREATE TABLE Uran.Cases (
-  id bigint IDENTITY,
+  id bigint NOT NULL,
   gid uniqueidentifier NOT NULL,
   Number nvarchar(255) NOT NULL,
   InnerNumber nvarchar(50) NOT NULL,
@@ -75,7 +264,7 @@ CREATE TABLE Uran.Cases (
   CreateDate datetime NOT NULL,
   LogCreateDateTime datetime2 NOT NULL,
   LogActionDateTime datetime2 NOT NULL,
-  RecordSourceIdentity nvarchar(10) NOT NULL,
+  RecordSourceNOT NULL nvarchar(10) NOT NULL,
   LoadDateTime datetime2 NOT NULL,
   CONSTRAINT PK_Cases_Id PRIMARY KEY CLUSTERED (Id)
 )
@@ -90,7 +279,7 @@ GO
 PRINT (N'Create table [Uran].[Products]')
 GO
 CREATE TABLE Uran.Products (
-  id bigint IDENTITY,
+  id bigint NOT NULL,
   gid uniqueidentifier NOT NULL ROWGUIDCOL,
   ProductTypeGID uniqueidentifier NULL,
   PolisNumber nvarchar(50) NOT NULL,
@@ -106,7 +295,7 @@ CREATE TABLE Uran.Products (
   InsuredGID uniqueidentifier NULL,
   LogCreateDateTime datetime2 NOT NULL,
   LogActionDateTime datetime2 NOT NULL,
-  RecordSourceIdentity nvarchar(10) NOT NULL,
+  RecordSourceNOT NULL nvarchar(10) NOT NULL,
   LoadDateTime datetime2 NOT NULL,
   CONSTRAINT PK_Products_Id PRIMARY KEY CLUSTERED (Id)
 )
@@ -120,7 +309,7 @@ GO
 PRINT (N'Create table [Uran].[Events]')
 GO
 CREATE TABLE Uran.Events (
-  id int IDENTITY,
+  id int NOT NULL,
   gid uniqueidentifier NOT NULL,
   Date datetime NULL,
   CountryGID uniqueidentifier NOT NULL,
@@ -130,7 +319,7 @@ CREATE TABLE Uran.Events (
   Comment nvarchar(255) NULL,
   LogCreateDateTime datetime2 NOT NULL,
   LogActionDateTime datetime2 NOT NULL,
-  RecordSourceIdentity nvarchar(10) NOT NULL,
+  RecordSourceNOT NULL nvarchar(10) NOT NULL,
   LoadDateTime datetime2 NOT NULL,
   CONSTRAINT PK_Events_Id PRIMARY KEY CLUSTERED (Id)
 )
@@ -144,7 +333,7 @@ GO
 PRINT (N'Create table [Uran].[Reservations]')
 GO
 CREATE TABLE Uran.Reservations (
-  id bigint IDENTITY,
+  id bigint NOT NULL,
   gid uniqueidentifier NOT NULL,
   Amount decimal(18, 2) NOT NULL,
   PreviousDamageAmount decimal(18, 2) NULL,
@@ -168,7 +357,7 @@ CREATE TABLE Uran.Reservations (
   Deleted bit NOT NULL,
   LogCreateDateTime datetime2 NOT NULL,
   LogActionDateTime datetime2 NOT NULL,
-  RecordSourceIdentity nvarchar(10) NOT NULL,
+  RecordSourceNOT NULL nvarchar(10) NOT NULL,
   LoadDateTime datetime2 NOT NULL,
   CONSTRAINT PK_Reservations_Id PRIMARY KEY CLUSTERED (Id)
 )
@@ -182,7 +371,7 @@ GO
 PRINT (N'Create table [Uran].[ClaimToParameterValues]')
 GO
 CREATE TABLE Uran.ClaimToParameterValues (
-  id bigint IDENTITY,
+  id bigint NOT NULL,
   gid uniqueidentifier NOT NULL,
   ClaimGID uniqueidentifier NOT NULL,
   ParameterValue sql_variant NOT NULL,
@@ -191,7 +380,7 @@ CREATE TABLE Uran.ClaimToParameterValues (
   AuthorGID uniqueidentifier NULL,
   LogCreateDateTime datetime2 NOT NULL,
   LogActionDateTime datetime2 NOT NULL,
-  RecordSourceIdentity nvarchar(10) NOT NULL,
+  RecordSourceNOT NULL nvarchar(10) NOT NULL,
   LoadDateTime datetime2 NOT NULL,
   CONSTRAINT PK_ClaimToParameterValues_Id PRIMARY KEY CLUSTERED (Id)
 )
@@ -207,7 +396,7 @@ GO
 CREATE TABLE Uran.Faces (
   gid uniqueidentifier NOT NULL,
   Name nvarchar(255) NOT NULL,
-  id bigint IDENTITY,
+  id bigint NOT NULL,
   AuthorGID uniqueidentifier NULL,
   PersonTypeID bigint NOT NULL,
   FullNameEnglish nvarchar(255) NULL,
@@ -243,7 +432,7 @@ CREATE TABLE Uran.Faces (
   FaceID nvarchar(15) NULL,
   LogCreateDateTime datetime2 NOT NULL,
   LogActionDateTime datetime2 NOT NULL,
-  RecordSourceIdentity nvarchar(10) NOT NULL,
+  RecordSourceNOT NULL nvarchar(10) NOT NULL,
   LoadDateTime datetime2 NOT NULL,
   CONSTRAINT PK_Faces_Id PRIMARY KEY CLUSTERED (Id)
 )
@@ -257,7 +446,7 @@ GO
 PRINT (N'Create table [Uran].[InsuranceObjects]')
 GO
 CREATE TABLE Uran.InsuranceObjects (
-  id bigint IDENTITY,
+  id bigint NOT NULL,
   gid uniqueidentifier NOT NULL ROWGUIDCOL,
   ObjectCategory nvarchar(50) NULL,
   InsuranceObjectTypeGID uniqueidentifier NULL,
@@ -275,7 +464,7 @@ CREATE TABLE Uran.InsuranceObjects (
   ParentInsuranceObjectGID uniqueidentifier NULL,
   LogCreateDateTime datetime2 NOT NULL,
   LogActionDateTime datetime2 NOT NULL,
-  RecordSourceIdentity nvarchar(10) NOT NULL,
+  RecordSourceNOT NULL nvarchar(10) NOT NULL,
   LoadDateTime datetime2 NOT NULL,
   CONSTRAINT PK_InsuranceObjects_Id PRIMARY KEY CLUSTERED (Id)
 )
@@ -289,7 +478,7 @@ GO
 PRINT (N'Create table [Uran].[EventToParameterValues]')
 GO
 CREATE TABLE Uran.EventToParameterValues (
-  id bigint IDENTITY,
+  id bigint NOT NULL,
   gid uniqueidentifier NOT NULL ROWGUIDCOL,
   EventGID uniqueidentifier NOT NULL,
   ParameterValue sql_variant NOT NULL,
@@ -298,7 +487,7 @@ CREATE TABLE Uran.EventToParameterValues (
   AuthorGID uniqueidentifier NULL,
   LogCreateDateTime datetime2 NOT NULL,
   LogActionDateTime datetime2 NOT NULL,
-  RecordSourceIdentity nvarchar(10) NOT NULL,
+  RecordSourceNOT NULL nvarchar(10) NOT NULL,
   LoadDateTime datetime2 NOT NULL,
   CONSTRAINT PK_EventToParameterValues_Id PRIMARY KEY CLUSTERED (Id)
 )
@@ -312,7 +501,7 @@ GO
 PRINT (N'Create table [Uran].[Payables]')
 GO
 CREATE TABLE Uran.Payables (
-  id int IDENTITY,
+  id int NOT NULL,
   gid uniqueidentifier NOT NULL,
   MFO nvarchar(255) NULL,
   PaymentAccount nvarchar(255) NULL,
@@ -353,7 +542,7 @@ CREATE TABLE Uran.Payables (
   PaymentPeriodAmount decimal(18, 2) NULL,
   LogCreateDateTime datetime2 NOT NULL,
   LogActionDateTime datetime2 NOT NULL,
-  RecordSourceIdentity nvarchar(10) NOT NULL,
+  RecordSourceNOT NULL nvarchar(10) NOT NULL,
   LoadDateTime datetime2 NOT NULL,
   CONSTRAINT PK_Payables_Id PRIMARY KEY CLUSTERED (Id)
 )
@@ -367,10 +556,10 @@ GO
 PRINT (N'Create table [Reference].[ReservationCalculationTypes]')
 GO
 CREATE TABLE Reference.ReservationCalculationTypes (
-  id int IDENTITY,
+  id int NOT NULL,
   gid uniqueidentifier NOT NULL,
   Name nvarchar(100) NOT NULL,
-  RecordSourceIdentity nvarchar(10) NOT NULL,
+  RecordSourceNOT NULL nvarchar(10) NOT NULL,
   LoadDateTime datetime2 NOT NULL,
   CONSTRAINT PK_ReservationCalculationTypes_Id PRIMARY KEY CLUSTERED (Id)
 )
@@ -384,7 +573,7 @@ GO
 PRINT (N'Create table [Reference].[ProgramTypeToClaimTypes]')
 GO
 CREATE TABLE Reference.ProgramTypeToClaimTypes (
-  id bigint IDENTITY,
+  id bigint NOT NULL,
   gid uniqueidentifier NOT NULL ROWGUIDCOL,
   ClaimTypeGID uniqueidentifier NOT NULL,
   ProgramTypeGID uniqueidentifier NOT NULL,
@@ -392,7 +581,7 @@ CREATE TABLE Reference.ProgramTypeToClaimTypes (
   Reserve decimal(18, 2) NULL,
   RegulationCost decimal(18, 2) NULL,
   RetentionLimit decimal(18, 2) NULL,
-  RecordSourceIdentity nvarchar(10) NOT NULL,
+  RecordSourceNOT NULL nvarchar(10) NOT NULL,
   LoadDateTime datetime2 NOT NULL,
   CONSTRAINT PK_ProgramTypeToClaimTypes_Id PRIMARY KEY CLUSTERED (Id)
 )
@@ -408,7 +597,7 @@ GO
 CREATE TABLE Uran.Vehicles (
   gid uniqueidentifier NOT NULL,
   RegistrationNumber nvarchar(50) NULL,
-  id bigint IDENTITY,
+  id bigint NOT NULL,
   AuthorGID uniqueidentifier NULL,
   ModelGID uniqueidentifier NOT NULL,
   ManufacturerGID uniqueidentifier NOT NULL,
@@ -440,7 +629,7 @@ CREATE TABLE Uran.Vehicles (
   Address nvarchar(255) NULL,
   LogCreateDateTime datetime2 NOT NULL,
   LogActionDateTime datetime2 NOT NULL,
-  RecordSourceIdentity nvarchar(10) NOT NULL,
+  RecordSourceNOT NULL nvarchar(10) NOT NULL,
   LoadDateTime datetime2 NOT NULL,
   CONSTRAINT PK_Vehicles_Id PRIMARY KEY CLUSTERED (Id)
 )
@@ -454,7 +643,7 @@ GO
 PRINT (N'Create table [Uran].[Regresses]')
 GO
 CREATE TABLE Uran.Regresses (
-  id bigint IDENTITY,
+  id bigint NOT NULL,
   gid uniqueidentifier NOT NULL ROWGUIDCOL,
   IncomingNumber nvarchar(255) NULL,
   IncomingDate datetime NULL,
@@ -471,7 +660,7 @@ CREATE TABLE Uran.Regresses (
   BranchGID uniqueidentifier NULL,
   LogCreateDateTime datetime2 NOT NULL,
   LogActionDateTime datetime2 NOT NULL,
-  RecordSourceIdentity nvarchar(10) NOT NULL,
+  RecordSourceNOT NULL nvarchar(10) NOT NULL,
   LoadDateTime datetime2 NOT NULL,
   CONSTRAINT PK_Regresses_Id PRIMARY KEY CLUSTERED (Id)
 )
@@ -485,7 +674,7 @@ GO
 PRINT (N'Create table [Uran].[CasesDocuments]')
 GO
 CREATE TABLE Uran.CasesDocuments (
-  id bigint IDENTITY,
+  id bigint NOT NULL,
   gid uniqueidentifier NOT NULL ROWGUIDCOL,
   CaseGID uniqueidentifier NOT NULL,
   DocumentGID uniqueidentifier NOT NULL,
@@ -499,7 +688,7 @@ CREATE TABLE Uran.CasesDocuments (
   Deleted bit NOT NULL,
   LogCreateDateTime datetime2 NOT NULL,
   LogActionDateTime datetime2 NOT NULL,
-  RecordSourceIdentity nvarchar(10) NOT NULL,
+  RecordSourceNOT NULL nvarchar(10) NOT NULL,
   LoadDateTime datetime2 NOT NULL,
   CONSTRAINT PK_CasesDocuments_Id PRIMARY KEY CLUSTERED (Id)
 )
@@ -513,7 +702,7 @@ GO
 PRINT (N'Create table [Uran].[Documents]')
 GO
 CREATE TABLE Uran.Documents (
-  id int IDENTITY,
+  id int NOT NULL,
   gid uniqueidentifier NOT NULL,
   Name nvarchar(255) NOT NULL,
   Serial nvarchar(50) NULL,
@@ -534,7 +723,7 @@ CREATE TABLE Uran.Documents (
   WorkflowGID uniqueidentifier NULL,
   LogCreateDateTime datetime2 NOT NULL,
   LogActionDateTime datetime2 NOT NULL,
-  RecordSourceIdentity nvarchar(10) NOT NULL,
+  RecordSourceNOT NULL nvarchar(10) NOT NULL,
   LoadDateTime datetime2 NOT NULL,
   CONSTRAINT PK_Documents_Id PRIMARY KEY CLUSTERED (Id)
 )
@@ -548,7 +737,7 @@ GO
 PRINT (N'Create table [Uran].[PayableToParameterValues]')
 GO
 CREATE TABLE Uran.PayableToParameterValues (
-  id bigint IDENTITY,
+  id bigint NOT NULL,
   gid uniqueidentifier NOT NULL,
   PayableGID uniqueidentifier NOT NULL,
   ParameterValue sql_variant NOT NULL,
@@ -557,7 +746,7 @@ CREATE TABLE Uran.PayableToParameterValues (
   AuthorGID uniqueidentifier NULL,
   LogCreateDateTime datetime2 NOT NULL,
   LogActionDateTime datetime2 NOT NULL,
-  RecordSourceIdentity nvarchar(10) NOT NULL,
+  RecordSourceNOT NULL nvarchar(10) NOT NULL,
   LoadDateTime datetime2 NOT NULL,
   CONSTRAINT PK_PayableToParameterValues_Id PRIMARY KEY CLUSTERED (Id)
 )
@@ -571,7 +760,7 @@ GO
 PRINT (N'Create table [Uran].[Calculations]')
 GO
 CREATE TABLE Uran.Calculations (
-  id int IDENTITY,
+  id int NOT NULL,
   gid uniqueidentifier NOT NULL,
   RecipientGID uniqueidentifier NULL,
   PrintDate datetime NULL,
@@ -595,7 +784,7 @@ CREATE TABLE Uran.Calculations (
   BranchGID uniqueidentifier NULL,
   LogCreateDateTime datetime2 NOT NULL,
   LogActionDateTime datetime2 NOT NULL,
-  RecordSourceIdentity nvarchar(10) NOT NULL,
+  RecordSourceNOT NULL nvarchar(10) NOT NULL,
   LoadDateTime datetime2 NOT NULL,
   CONSTRAINT PK_Calculations_Id PRIMARY KEY CLUSTERED (Id)
 )
@@ -609,7 +798,7 @@ GO
 PRINT (N'Create table [Uran].[CalculationToParameterValues]')
 GO
 CREATE TABLE Uran.CalculationToParameterValues (
-  id bigint IDENTITY,
+  id bigint NOT NULL,
   gid uniqueidentifier NOT NULL,
   CalculationGID uniqueidentifier NOT NULL,
   ParameterValue sql_variant NOT NULL,
@@ -618,7 +807,7 @@ CREATE TABLE Uran.CalculationToParameterValues (
   AuthorGID uniqueidentifier NULL,
   LogCreateDateTime datetime2 NOT NULL,
   LogActionDateTime datetime2 NOT NULL,
-  RecordSourceIdentity nvarchar(10) NOT NULL,
+  RecordSourceNOT NULL nvarchar(10) NOT NULL,
   LoadDateTime datetime2 NOT NULL,
   CONSTRAINT PK_CalculationToParameterValues_Id PRIMARY KEY CLUSTERED (Id)
 )
@@ -632,13 +821,13 @@ GO
 PRINT (N'Create table [Reference].[DocumentParameterValues]')
 GO
 CREATE TABLE Reference.DocumentParameterValues (
-  id bigint IDENTITY,
+  id bigint NOT NULL,
   gid uniqueidentifier NOT NULL,
   DocumentParameterGID uniqueidentifier NULL,
   Value sql_variant NULL,
   LogCreateDateTime datetime2 NOT NULL,
   LogActionDateTime datetime2 NOT NULL,
-  RecordSourceIdentity nvarchar(10) NOT NULL,
+  RecordSourceNOT NULL nvarchar(10) NOT NULL,
   LoadDateTime datetime2 NOT NULL,
   CONSTRAINT PK_DocumentParameterValues_Id PRIMARY KEY CLUSTERED (Id)
 )
