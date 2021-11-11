@@ -220,11 +220,11 @@ CREATE TABLE Uran.Claims (
   LogCreateDateTime datetime2 NOT NULL,
   LogActionDateTime datetime2 NOT NULL,
   RecordSource nvarchar(10) NOT NULL,
-  LoadDateTime datetime2 NOT NULL,
-  CONSTRAINT PK_Claims_Id PRIMARY KEY CLUSTERED (Id)
+  LoadDateTime datetime2 NOT NULL
 )
-ON [PRIMARY]
+ON [DATA]
 GO
+ALTER TABLE Uran.Claims ADD CONSTRAINT PK_Claims_Id PRIMARY KEY CLUSTERED (Id) ON [DATA]
 
 
 GO
@@ -269,12 +269,13 @@ CREATE TABLE Uran.Cases (
   LogCreateDateTime datetime2 NOT NULL,
   LogActionDateTime datetime2 NOT NULL,
   RecordSource nvarchar(10) NOT NULL,
-  LoadDateTime datetime2 NOT NULL,
-  CONSTRAINT PK_Cases_Id PRIMARY KEY CLUSTERED (Id)
+  LoadDateTime datetime2 NOT NULL
 )
-ON [PRIMARY]
-TEXTIMAGE_ON [PRIMARY]
+ON [DATA]
+TEXTIMAGE_ON [DATA]
 GO
+ALTER TABLE Uran.Cases ADD CONSTRAINT PK_Cases_Id PRIMARY KEY CLUSTERED  (Id) ON [DATA]
+
 
 GO
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Uran].[Cases]') AND type in (N'U'))
@@ -304,11 +305,12 @@ CREATE TABLE Uran.Products (
   LogCreateDateTime datetime2 NOT NULL,
   LogActionDateTime datetime2 NOT NULL,
   RecordSource nvarchar(10) NOT NULL,
-  LoadDateTime datetime2 NOT NULL,
-  CONSTRAINT PK_Products_Id PRIMARY KEY CLUSTERED (Id)
+  LoadDateTime datetime2 NOT NULL
 )
-ON [PRIMARY]
+ON [DATA]
 GO
+ALTER TABLE Uran.Products ADD CONSTRAINT PK_Products_Id PRIMARY KEY CLUSTERED  (Id) ON [DATA]
+
 
 GO
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Uran].[Products]') AND type in (N'U'))
@@ -332,11 +334,12 @@ CREATE TABLE Uran.Events (
   LogCreateDateTime datetime2 NOT NULL,
   LogActionDateTime datetime2 NOT NULL,
   RecordSource nvarchar(10) NOT NULL,
-  LoadDateTime datetime2 NOT NULL,
-  CONSTRAINT PK_Events_Id PRIMARY KEY CLUSTERED (Id)
+  LoadDateTime datetime2 NOT NULL
 )
-ON [PRIMARY]
+ON [DATA]
 GO
+ALTER TABLE Uran.Events ADD CONSTRAINT PK_Events_Id PRIMARY KEY CLUSTERED  (Id) ON [DATA]
+
 
 GO
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Uran].[Events]') AND type in (N'U'))
@@ -374,11 +377,12 @@ CREATE TABLE Uran.Reservations (
   LogCreateDateTime datetime2 NOT NULL,
   LogActionDateTime datetime2 NOT NULL,
   RecordSource nvarchar(10) NOT NULL,
-  LoadDateTime datetime2 NOT NULL,
-  CONSTRAINT PK_Reservations_Id PRIMARY KEY CLUSTERED (Id)
+  LoadDateTime datetime2 NOT NULL
 )
-ON [PRIMARY]
+ON [DATA]
 GO
+ALTER TABLE Uran.Reservations ADD CONSTRAINT PK_Reservations_Id PRIMARY KEY CLUSTERED  (Id) ON [DATA]
+
 
 GO
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Uran].[Reservations]') AND type in (N'U'))
@@ -401,11 +405,11 @@ CREATE TABLE Uran.ClaimToParameterValues (
   LogCreateDateTime datetime2 NOT NULL,
   LogActionDateTime datetime2 NOT NULL,
   RecordSource nvarchar(10) NOT NULL,
-  LoadDateTime datetime2 NOT NULL,
-  CONSTRAINT PK_ClaimToParameterValues_Id PRIMARY KEY CLUSTERED (Id)
+  LoadDateTime datetime2 NOT NULL
 )
-ON [PRIMARY]
+ON [DATA]
 GO
+ALTER TABLE Uran.ClaimToParameterValues ADD CONSTRAINT PK_ClaimToParameterValues_Id PRIMARY KEY CLUSTERED  (Id) ON [DATA]
 
 GO
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Uran].[ClaimToParameterValues]') AND type in (N'U'))
@@ -458,11 +462,11 @@ CREATE TABLE Uran.Faces (
   LogCreateDateTime datetime2 NOT NULL,
   LogActionDateTime datetime2 NOT NULL,
   RecordSource nvarchar(10) NOT NULL,
-  LoadDateTime datetime2 NOT NULL,
-  CONSTRAINT PK_Faces_Id PRIMARY KEY CLUSTERED (Id)
+  LoadDateTime datetime2 NOT NULL
 )
-ON [PRIMARY]
+ON [DATA]
 GO
+ALTER TABLE Uran.Faces ADD CONSTRAINT PK_Faces_Id PRIMARY KEY CLUSTERED  (Id) ON [DATA]
 
 GO
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Uran].[Faces]') AND type in (N'U'))
@@ -494,11 +498,11 @@ CREATE TABLE Uran.InsuranceObjects (
   LogCreateDateTime datetime2 NOT NULL,
   LogActionDateTime datetime2 NOT NULL,
   RecordSource nvarchar(10) NOT NULL,
-  LoadDateTime datetime2 NOT NULL,
-  CONSTRAINT PK_InsuranceObjects_Id PRIMARY KEY CLUSTERED (Id)
+  LoadDateTime datetime2 NOT NULL
 )
-ON [PRIMARY]
+ON [DATA]
 GO
+ALTER TABLE Uran.InsuranceObjects ADD CONSTRAINT PK_InsuranceObjects_Id PRIMARY KEY CLUSTERED  (Id) ON [DATA]
 
 GO
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Uran].[InsuranceObjects]') AND type in (N'U'))
@@ -522,11 +526,11 @@ CREATE TABLE Uran.EventToParameterValues (
   LogCreateDateTime datetime2 NOT NULL,
   LogActionDateTime datetime2 NOT NULL,
   RecordSource nvarchar(10) NOT NULL,
-  LoadDateTime datetime2 NOT NULL,
-  CONSTRAINT PK_EventToParameterValues_Id PRIMARY KEY CLUSTERED (Id)
+  LoadDateTime datetime2 NOT NULL
 )
-ON [PRIMARY]
+ON [DATA]
 GO
+ALTER TABLE Uran.EventToParameterValues ADD CONSTRAINT PK_EventToParameterValues_Id PRIMARY KEY CLUSTERED  (Id) ON [DATA]
 
 GO
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Uran].[EventToParameterValues]') AND type in (N'U'))
@@ -582,11 +586,11 @@ CREATE TABLE Uran.Payables (
   LogCreateDateTime datetime2 NOT NULL,
   LogActionDateTime datetime2 NOT NULL,
   RecordSource nvarchar(10) NOT NULL,
-  LoadDateTime datetime2 NOT NULL,
-  CONSTRAINT PK_Payables_Id PRIMARY KEY CLUSTERED (Id)
+  LoadDateTime datetime2 NOT NULL
 )
-ON [PRIMARY]
+ON [DATA]
 GO
+ALTER TABLE Uran.Payables ADD CONSTRAINT PK_Payables_Id PRIMARY KEY CLUSTERED  (Id) ON [DATA]
 
 GO
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Uran].[Payables]') AND type in (N'U'))
@@ -605,11 +609,11 @@ CREATE TABLE Reference.ReservationCalculationTypes (
   gid uniqueidentifier NOT NULL,
   Name nvarchar(100) NOT NULL,
   RecordSource nvarchar(10) NOT NULL,
-  LoadDateTime datetime2 NOT NULL,
-  CONSTRAINT PK_ReservationCalculationTypes_Id PRIMARY KEY CLUSTERED (Id)
+  LoadDateTime datetime2 NOT NULL
 )
-ON [PRIMARY]
+ON [DATA]
 GO
+ALTER TABLE Reference.ReservationCalculationTypes ADD CONSTRAINT PK_ReservationCalculationTypes_Id PRIMARY KEY CLUSTERED  (Id) ON [DATA]
 
 GO
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Reference].[ReservationCalculationTypes]') AND type in (N'U'))
@@ -633,11 +637,12 @@ CREATE TABLE Reference.ProgramTypeToClaimTypes (
   RegulationCost decimal(18, 2) NULL,
   RetentionLimit decimal(18, 2) NULL,
   RecordSource nvarchar(10) NOT NULL,
-  LoadDateTime datetime2 NOT NULL,
-  CONSTRAINT PK_ProgramTypeToClaimTypes_Id PRIMARY KEY CLUSTERED (Id)
+  LoadDateTime datetime2 NOT NULL
 )
-ON [PRIMARY]
+ON [DATA]
 GO
+ALTER TABLE Reference.ProgramTypeToClaimTypes ADD CONSTRAINT PK_ProgramTypeToClaimTypes_Id PRIMARY KEY CLUSTERED  (Id) ON [DATA]
+
 
 GO
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Reference].[ProgramTypeToClaimTypes]') AND type in (N'U'))
@@ -685,11 +690,11 @@ CREATE TABLE Uran.Vehicles (
   LogCreateDateTime datetime2 NOT NULL,
   LogActionDateTime datetime2 NOT NULL,
   RecordSource nvarchar(10) NOT NULL,
-  LoadDateTime datetime2 NOT NULL,
-  CONSTRAINT PK_Vehicles_Id PRIMARY KEY CLUSTERED (Id)
+  LoadDateTime datetime2 NOT NULL
 )
-ON [PRIMARY]
+ON [DATA]
 GO
+ALTER TABLE Uran.Vehicles ADD CONSTRAINT PK_Vehicles_Id PRIMARY KEY CLUSTERED  (Id) ON [DATA]
 
 GO
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Uran].[Vehicles]') AND type in (N'U'))
@@ -720,11 +725,11 @@ CREATE TABLE Uran.Regresses (
   LogCreateDateTime datetime2 NOT NULL,
   LogActionDateTime datetime2 NOT NULL,
   RecordSource nvarchar(10) NOT NULL,
-  LoadDateTime datetime2 NOT NULL,
-  CONSTRAINT PK_Regresses_Id PRIMARY KEY CLUSTERED (Id)
+  LoadDateTime datetime2 NOT NULL
 )
-ON [PRIMARY]
+ON [DATA]
 GO
+ALTER TABLE Uran.Regresses ADD CONSTRAINT PK_Regresses_Id PRIMARY KEY CLUSTERED  (Id) ON [DATA]
 
 GO
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Uran].[Regresses]') AND type in (N'U'))
@@ -752,11 +757,11 @@ CREATE TABLE Uran.CasesDocuments (
   LogCreateDateTime datetime2 NOT NULL,
   LogActionDateTime datetime2 NOT NULL,
   RecordSource nvarchar(10) NOT NULL,
-  LoadDateTime datetime2 NOT NULL,
-  CONSTRAINT PK_CasesDocuments_Id PRIMARY KEY CLUSTERED (Id)
+  LoadDateTime datetime2 NOT NULL
 )
-ON [PRIMARY]
+ON [DATA]
 GO
+ALTER TABLE Uran.CasesDocuments ADD CONSTRAINT PK_CasesDocuments_Id PRIMARY KEY CLUSTERED  (Id) ON [DATA]
 
 GO
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Uran].[CasesDocuments]') AND type in (N'U'))
@@ -791,11 +796,12 @@ CREATE TABLE Uran.Documents (
   LogCreateDateTime datetime2 NOT NULL,
   LogActionDateTime datetime2 NOT NULL,
   RecordSource nvarchar(10) NOT NULL,
-  LoadDateTime datetime2 NOT NULL,
-  CONSTRAINT PK_Documents_Id PRIMARY KEY CLUSTERED (Id)
+  LoadDateTime datetime2 NOT NULL 
 )
-ON [PRIMARY]
+ON [DATA]
 GO
+ALTER TABLE Uran.Documents ADD CONSTRAINT PK_Documents_Id PRIMARY KEY CLUSTERED  (Id) ON [DATA]
+
 
 GO
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Uran].[Documents]') AND type in (N'U'))
@@ -819,11 +825,12 @@ CREATE TABLE Uran.PayableToParameterValues (
   LogCreateDateTime datetime2 NOT NULL,
   LogActionDateTime datetime2 NOT NULL,
   RecordSource nvarchar(10) NOT NULL,
-  LoadDateTime datetime2 NOT NULL,
-  CONSTRAINT PK_PayableToParameterValues_Id PRIMARY KEY CLUSTERED (Id)
+  LoadDateTime datetime2 NOT NULL 
 )
-ON [PRIMARY]
+ON [DATA]
 GO
+ALTER TABLE Uran.PayableToParameterValues ADD CONSTRAINT PK_PayableToParameterValues_Id PRIMARY KEY CLUSTERED  (Id) ON [DATA]
+
 
 GO
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Uran].[PayableToParameterValues]') AND type in (N'U'))
@@ -862,11 +869,11 @@ CREATE TABLE Uran.Calculations (
   LogCreateDateTime datetime2 NOT NULL,
   LogActionDateTime datetime2 NOT NULL,
   RecordSource nvarchar(10) NOT NULL,
-  LoadDateTime datetime2 NOT NULL,
-  CONSTRAINT PK_Calculations_Id PRIMARY KEY CLUSTERED (Id)
+  LoadDateTime datetime2 NOT NULL 
 )
-ON [PRIMARY]
+ON [DATA]
 GO
+ALTER TABLE Uran.Calculations ADD CONSTRAINT PK_Calculations_Id PRIMARY KEY CLUSTERED  (Id) ON [DATA]
 
 GO
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Uran].[Calculations]') AND type in (N'U'))
@@ -890,11 +897,11 @@ CREATE TABLE Uran.CalculationToParameterValues (
   LogCreateDateTime datetime2 NOT NULL,
   LogActionDateTime datetime2 NOT NULL,
   RecordSource nvarchar(10) NOT NULL,
-  LoadDateTime datetime2 NOT NULL,
-  CONSTRAINT PK_CalculationToParameterValues_Id PRIMARY KEY CLUSTERED (Id)
+  LoadDateTime datetime2 NOT NULL 
 )
-ON [PRIMARY]
+ON [DATA]
 GO
+ALTER TABLE Uran.CalculationToParameterValues ADD CONSTRAINT PK_CalculationToParameterValues_Id PRIMARY KEY CLUSTERED  (Id) ON [DATA]
 
 GO
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Uran].[CalculationToParameterValues]') AND type in (N'U'))
@@ -914,10 +921,11 @@ CREATE TABLE Reference.DocumentParameterValues (
   LogCreateDateTime datetime2 NOT NULL,
   LogActionDateTime datetime2 NOT NULL,
   RecordSource nvarchar(10) NOT NULL,
-  LoadDateTime datetime2 NOT NULL,
-  CONSTRAINT PK_DocumentParameterValues_Id PRIMARY KEY CLUSTERED (Id)
+  LoadDateTime datetime2 NOT NULL
 )
-ON [PRIMARY]
+ON [DATA]
+GO
+ALTER TABLE Reference.DocumentParameterValues ADD CONSTRAINT PK_DocumentParameterValues_Id PRIMARY KEY CLUSTERED  (Id) ON [DATA]
 
 GO
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Reference].[DocumentParameterValues]') AND type in (N'U'))

@@ -30,8 +30,8 @@
   [LogActionDateTime] [datetime2] NOT NULL,
   [RecordSource] [nvarchar](10) NOT NULL,
   [LoadDateTime] [datetime2] NOT NULL,
-  CONSTRAINT [PK_Cases_Id] PRIMARY KEY CLUSTERED ([id])
+  CONSTRAINT [PK_Cases_Id] PRIMARY KEY CLUSTERED ([id]) ON [DATA]
 )
-ON [PRIMARY]
-TEXTIMAGE_ON [PRIMARY]
+ON [DATA]
+TEXTIMAGE_ON [DATA]
 GO

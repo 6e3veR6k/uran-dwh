@@ -10,7 +10,7 @@
   [LogActionDateTime] [datetime2] NOT NULL,
   [RecordSource] [nvarchar](10) NOT NULL,
   [LoadDateTime] [datetime2] NOT NULL,
-  CONSTRAINT [PK_CalculationToParameterValues_Id] PRIMARY KEY CLUSTERED ([id])
+  CONSTRAINT [PK_CalculationToParameterValues_Id] PRIMARY KEY CLUSTERED ([id]) ON [DATA]
 )
-ON [PRIMARY]
+ON [DATA]
 GO
