@@ -1,0 +1,12 @@
+﻿<?xml version="1.0"?>
+<DTS:ConnectionManager xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:ObjectName="hq01db02.WarehouseStageArea"
+  DTS:DTSID="{0CAA3751-84F9-40A1-AE71-602EEF48B7F8}"
+  DTS:CreationName="OLEDB">
+  <DTS:ObjectData>
+    <DTS:ConnectionManager
+      DTS:ConnectRetryCount="1"
+      DTS:ConnectRetryInterval="5"
+      DTS:ConnectionString="Data Source=hq01db02;Initial Catalog=WarehouseStageArea;Provider=SQLNCLI11.1;Integrated Security=SSPI;MARS Connection=True;Auto Translate=False;" />
+  </DTS:ObjectData>
+</DTS:ConnectionManager>

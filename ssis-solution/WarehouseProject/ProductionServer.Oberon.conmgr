@@ -1,0 +1,12 @@
+﻿<?xml version="1.0"?>
+<DTS:ConnectionManager xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:ObjectName="hq01db01.Oberon"
+  DTS:DTSID="{62508229-C80A-4E14-88E7-BE371AEA8173}"
+  DTS:CreationName="OLEDB">
+  <DTS:ObjectData>
+    <DTS:ConnectionManager
+      DTS:ConnectRetryCount="1"
+      DTS:ConnectRetryInterval="5"
+      DTS:ConnectionString="Data Source=hq01db01;Initial Catalog=Oberon;Provider=SQLNCLI11.1;Integrated Security=SSPI;MARS Connection=True;Trust Server Certificate=True;Auto Translate=False;" />
+  </DTS:ObjectData>
+</DTS:ConnectionManager>
