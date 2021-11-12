@@ -1,5 +1,5 @@
 DECLARE @Script as nvarchar(max) = ''
-DECLARE @TableName as nvarchar(max) = 'Claims'
+DECLARE @TableName as nvarchar(max) = 'Cases'
 DECLARE @SchemaName as nvarchar(max) = 'dbo'
 
 SELECT @Script = [Script1Part1] + '
