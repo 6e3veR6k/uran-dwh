@@ -29,7 +29,8 @@
           <SSIS:Property SSIS:Name="FormatVersion">1</SSIS:Property>
         </SSIS:Properties>
         <SSIS:Packages>
-          <SSIS:Package SSIS:Name="LoadStages.dtsx" SSIS:EntryPoint="1" />
+          <SSIS:Package SSIS:Name="LoadStages_2.dtsx" SSIS:EntryPoint="1" />
+          <SSIS:Package SSIS:Name="LoadStages_1.dtsx" SSIS:EntryPoint="1" />
         </SSIS:Packages>
         <SSIS:ConnectionManagers>
           <SSIS:ConnectionManager SSIS:Name="ProductionServer.Oberon.conmgr" />
@@ -335,16 +336,33 @@
             </SSIS:Parameter>
           </SSIS:ProjectConnectionParameters>
           <SSIS:PackageInfo>
-            <SSIS:PackageMetaData SSIS:Name="LoadStages.dtsx">
+            <SSIS:PackageMetaData SSIS:Name="LoadStages_2.dtsx">
+              <SSIS:Properties>
+                <SSIS:Property SSIS:Name="ID">{613C8F53-F1C2-4FF1-AE65-15B97996433C}</SSIS:Property>
+                <SSIS:Property SSIS:Name="Name">Package1</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionMajor">1</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionMinor">0</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionBuild">0</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionComments">
+                </SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionGUID">{1EAAAB59-0016-4342-B04B-6576E23CE618}</SSIS:Property>
+                <SSIS:Property SSIS:Name="PackageFormatVersion">8</SSIS:Property>
+                <SSIS:Property SSIS:Name="Description">
+                </SSIS:Property>
+                <SSIS:Property SSIS:Name="ProtectionLevel">0</SSIS:Property>
+              </SSIS:Properties>
+              <SSIS:Parameters />
+            </SSIS:PackageMetaData>
+            <SSIS:PackageMetaData SSIS:Name="LoadStages_1.dtsx">
               <SSIS:Properties>
                 <SSIS:Property SSIS:Name="ID">{BB0B8502-99C5-4993-AE86-4B3CB40C51B4}</SSIS:Property>
                 <SSIS:Property SSIS:Name="Name">LoadStages</SSIS:Property>
                 <SSIS:Property SSIS:Name="VersionMajor">1</SSIS:Property>
                 <SSIS:Property SSIS:Name="VersionMinor">0</SSIS:Property>
-                <SSIS:Property SSIS:Name="VersionBuild">3</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionBuild">24</SSIS:Property>
                 <SSIS:Property SSIS:Name="VersionComments">
                 </SSIS:Property>
-                <SSIS:Property SSIS:Name="VersionGUID">{F9D1544E-D244-4C4E-A19B-AFDEEDBB5574}</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionGUID">{96C27C06-EB6F-4F80-834B-AF483781913E}</SSIS:Property>
                 <SSIS:Property SSIS:Name="PackageFormatVersion">8</SSIS:Property>
                 <SSIS:Property SSIS:Name="Description">
                 </SSIS:Property>

@@ -6,6 +6,7 @@
   [Number] [nvarchar](255) NOT NULL,
   [StartDate] [datetime] NULL,
   [EndDate] [datetime] NULL,
+  [StatusGid] [uniqueidentifier] NULL,
   [IssuedDate] [date] NULL,
   [IssuedBy] [nvarchar](200) NULL,
   [ObjectGID] [uniqueidentifier] NULL,
@@ -20,7 +21,7 @@
   [WorkflowGID] [uniqueidentifier] NULL,
   [LogCreateDateTime] [datetime2] NOT NULL,
   [LogActionDateTime] [datetime2] NOT NULL,
-  [RecordSource] [nvarchar](10) NOT NULL,
+  [RecordSource] [nvarchar](128) NOT NULL,
   [LoadDateTime] [datetime2] NOT NULL,
   CONSTRAINT [PK_Documents_Id] PRIMARY KEY CLUSTERED ([id]) ON [DATA]
 )

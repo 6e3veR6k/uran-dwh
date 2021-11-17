@@ -15,7 +15,7 @@
   [InsuredGID] [uniqueidentifier] NULL,
   [LogCreateDateTime] [datetime2] NOT NULL,
   [LogActionDateTime] [datetime2] NOT NULL,
-  [RecordSource] [nvarchar](10) NOT NULL,
+  [RecordSource] [nvarchar](128) NOT NULL,
   [LoadDateTime] [datetime2] NOT NULL,
   CONSTRAINT [PK_Products_Id] PRIMARY KEY CLUSTERED ([id]) ON [DATA]
 )
