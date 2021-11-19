@@ -5,7 +5,7 @@
 -- =============================================
 
 DECLARE @Script as nvarchar(max) = ''
-DECLARE @TableName as nvarchar(max) = 'CalculationToParameterValues'
+DECLARE @TableName as nvarchar(max) = 'CommissarExaminations'
 DECLARE @SchemaName as nvarchar(max) = 'dbo'
 
 SELECT @Script = [Script1Part1] + '
