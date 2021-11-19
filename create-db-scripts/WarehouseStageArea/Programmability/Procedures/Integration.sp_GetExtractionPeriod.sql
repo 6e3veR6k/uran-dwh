@@ -1,7 +1,5 @@
 ﻿SET QUOTED_IDENTIFIER, ANSI_NULLS ON
 GO
-
-
 -- =============================================
 -- Author:		bezvershuk_do
 -- Create date: 19.08.2021
@@ -19,7 +17,7 @@ AS
 
     UPDATE [Integration].[PackageExecutions] 
     --todo: change to curent timestamp  / CURRENT_TIMESTAMP
-    SET CurrentExtractionDateTime = '20211111',
+    SET CurrentExtractionDateTime = CURRENT_TIMESTAMP,
       UserName = SUSER_SNAME(),
       Message = 'in progress'
     WHERE  TableName = @tableName
