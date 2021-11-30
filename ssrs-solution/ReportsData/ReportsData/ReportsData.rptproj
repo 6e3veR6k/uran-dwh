@@ -61,6 +61,7 @@
   <ItemGroup>
     <Report Include="Calculations.rdl" />
     <Report Include="ReportActs.rdl" />
+    <Report Include="ReportPayablePayments.rdl" />
     <Report Include="ReservationsOnDate.rdl" />
     <Report Include="RZNU_Reestr2.rdl" />
     <Report Include="RZNU_ReestrVidDaily.rdl" />
