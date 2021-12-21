@@ -60,6 +60,8 @@
   </ItemGroup>
   <ItemGroup>
     <Report Include="Calculations.rdl" />
+    <Report Include="CommissarExaminations.rdl" />
+    <Report Include="CommissarExaminations_2.rdl" />
     <Report Include="ReportActs.rdl" />
     <Report Include="ReportPayablePayments.rdl" />
     <Report Include="ReservationsOnDate.rdl" />
