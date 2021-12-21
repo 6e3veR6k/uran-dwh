@@ -1,0 +1,102 @@
+﻿DECLARE @LastExecutionDateTime DATETIME2 = ?;
+DECLARE @CurentExecutionDateTime DATETIME2 = ?;
+
+
+SELECT MainData.id,
+       MainData.gid,
+       MainData.ParentGID,
+       MainData.PayableGID,
+       MainData.OwnerGID,
+       MainData.OwnerName,
+       MainData.RepresentativePayment,
+       MainData.RepresentativeGID,
+       MainData.RepresentativeName,
+       MainData.AttorneyDate,
+       MainData.AttorneyNumber,
+       MainData.PaymentTypeGID,
+       MainData.PartnerGID,
+       MainData.BankGID,
+       MainData.BankName,
+       MainData.RecipientName,
+       MainData.RecipientIdentificationCode,
+       MainData.BankAccount,
+       MainData.PersonalAccount,
+       MainData.OffsetPolisNumber,
+       MainData.PaymentPurpose,
+       MainData.CreateDate,
+       MainData.AdjustmentTypeGID,
+       MainData.AdjustmentAccountingDate,
+       MainData.AdjustmentCancelDate,
+       MainData.ExportDate,
+       MainData.ExportSuccessDate,
+       MainData.AuthorGID,
+       MainData.BankMFO,
+       MainData.AddUserGID,
+       MainData.AddDate,
+       MainData.PaymentPurposeTemplateGID,
+       MainData.RecipientBankName,
+       MainData.RefusalDate,
+       MainData.RefusalReason,
+       MainData.RecipientGID,
+       MainData.AccountGID,
+       MainData.ProductGID,
+       MainData.LogCreateDate,
+       MainData.LogActionDate,
+       MainData.SourceIdentity,
+       MainData.LoadDatetime
+FROM
+(
+    SELECT src.id,
+           src.gid,
+           src.ParentGID,
+           src.PayableGID,
+           src.OwnerGID,
+           src.OwnerName,
+           src.RepresentativePayment,
+           src.RepresentativeGID,
+           src.RepresentativeName,
+           src.AttorneyDate,
+           src.AttorneyNumber,
+           src.PaymentTypeGID,
+           src.PartnerGID,
+           src.BankGID,
+           src.BankName,
+           src.RecipientName,
+           src.RecipientIdentificationCode,
+           src.BankAccount,
+           src.PersonalAccount,
+           src.OffsetPolisNumber,
+           src.PaymentPurpose,
+           src.CreateDate,
+           src.AdjustmentTypeGID,
+           src.AdjustmentAccountingDate,
+           src.AdjustmentCancelDate,
+           src.ExportDate,
+           src.ExportSuccessDate,
+           src.AuthorGID,
+           src.BankMFO,
+           src.AddUserGID,
+           src.AddDate,
+           src.PaymentPurposeTemplateGID,
+           src.RecipientBankName,
+           src.RefusalDate,
+           src.RefusalReason,
+           src.RecipientGID,
+           src.AccountGID,
+           src.ProductGID,
+           COALESCE(lg.[_CreateDate], CONVERT(DATETIME, '20100101', 112)) AS [LogCreateDate],
+           COALESCE(lg.[_ActionDate], CONVERT(DATETIME, '20100101', 112)) AS [LogActionDate],
+           @@SERVERNAME AS SourceIdentity,
+           CURRENT_TIMESTAMP AS LoadDatetime
+    FROM dbo.PayableDetails AS src
+    OUTER APPLY
+    (
+        SELECT MIN(L.ActionDate) AS [_CreateDate],
+               MAX(L.ActionDate) AS [_ActionDate]
+        FROM log.PayableDetails AS L
+        WHERE L.LoggedEntityGID = src.gid
+        GROUP BY L.LoggedEntityGID
+    ) AS lg
+) AS MainData
+WHERE MainData.[LogCreateDate] > @LastExecutionDateTime
+      AND MainData.[LogActionDate] <= @CurentExecutionDateTime

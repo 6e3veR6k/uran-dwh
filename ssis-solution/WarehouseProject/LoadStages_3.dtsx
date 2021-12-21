@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="11/19/2021 11:06:27 AM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="HQ00-5028-E8658"
+  DTS:CreatorName="ORANTA\bezvershuk_do"
+  DTS:DTSID="{C561E7D4-2ADC-41B6-961B-CBEA7D4203E6}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="15.0.2000.170"
+  DTS:LocaleID="1049"
+  DTS:ObjectName="Package1"
+  DTS:PackageType="5"
+  DTS:ProtectionLevel="0"
+  DTS:VersionGUID="{157C306F-D4F3-4F16-9C1C-258E3D1966E0}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:Variables />
+  <DTS:Executables />
+</DTS:Executable>
